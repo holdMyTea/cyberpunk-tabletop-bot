@@ -1,0 +1,4 @@
+- Add a DB
+- Add DB schema
+- ESLint & WebPack
+- Dockerize this

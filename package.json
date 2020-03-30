@@ -1,0 +1,15 @@
+{
+  "name": "tt-cyber-disc-bot",
+  "version": "0.0.1",
+  "description": "My little bot for the tabletop during quarantine in dsicord.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "holdMyTea",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.1.1"
+  }
+}
