@@ -1,6 +1,8 @@
 import Discord from 'discord.js'
-const client = new Discord.Client()
 
+import processCommand from './commands'
+
+const client = new Discord.Client()
 const botSecretToken = 'Njk0MTIxNDE3MDU0MDkzMzEy.XoHBIQ.8OpoRbJwVrG0r92jxZNWaqhZS4s'
 
 client.login(botSecretToken)
@@ -17,8 +19,8 @@ client.on('message', message => {
     return
   }
 
-  if (message.content === '!map') {
-    message.channel.send('https://imgur.com/a/Od1lUFi')
+  if (message.content.startsWith('!')) {
+    processCommand(message)
   }
 })
 
