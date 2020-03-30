@@ -1,14 +1,14 @@
-const Discord = require('discord.js')
+import Discord from 'discord.js'
 const client = new Discord.Client()
 
-bot_secret_token = 'Njk0MTIxNDE3MDU0MDkzMzEy.XoHBIQ.8OpoRbJwVrG0r92jxZNWaqhZS4s'
+const botSecretToken = 'Njk0MTIxNDE3MDU0MDkzMzEy.XoHBIQ.8OpoRbJwVrG0r92jxZNWaqhZS4s'
 
-client.login(bot_secret_token)
+client.login(botSecretToken)
 
 client.on('ready', () => {
   console.log('Connected as ' + client.user.tag)
 
-  channel = client.channels.fetch('694120472048041994')
+  client.channels.fetch('694120472048041994')
     .then(channel => channel.send('Wake the fuck up, Samurai'))
 })
 
@@ -22,4 +22,4 @@ client.on('message', message => {
   }
 })
 
-client.login(bot_secret_token)
+client.login(botSecretToken)

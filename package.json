@@ -4,12 +4,25 @@
   "description": "My little bot for the tabletop during quarantine in dsicord.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon --exec \"babel-node src/index.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "holdMyTea",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/plugin-syntax-object-rest-spread": "^7.8.3",
+    "@babel/preset-env": "^7.9.0",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "nodemon": "^2.0.2"
   }
 }

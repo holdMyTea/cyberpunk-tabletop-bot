@@ -1,4 +1,6 @@
+- Draft the roll command
 - Add a DB
 - Add DB schema
-- ESLint & WebPack
+- ~~ESLint & WebPack~~
 - Dockerize this
+- Add Keanu gif
