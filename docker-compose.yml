@@ -19,7 +19,7 @@ services:
   app:
     container_name: cyberpunk_app
     build:
-      context: ./app
+      context: ./
       dockerfile: Dockerfile
     depends_on:
       - db
