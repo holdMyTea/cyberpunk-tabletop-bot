@@ -1,11 +1,12 @@
 import Discord from 'discord.js'
 
+import env from './config'
+import db from './db'
 import processCommand from './commands'
 
 const client = new Discord.Client()
-const botSecretToken = 'Njk0MTIxNDE3MDU0MDkzMzEy.XoHBIQ.8OpoRbJwVrG0r92jxZNWaqhZS4s'
 
-client.login(botSecretToken)
+client.login(env.BOT_SECRET_TOKEN)
 
 client.on('ready', () => {
   console.log('Connected as ' + client.user.tag)
@@ -25,3 +26,7 @@ client.on('message', message => {
     processCommand(message)
   }
 })
+
+db.connectToDatabase(
+  () => console.log('Hello, db!!1')
+)

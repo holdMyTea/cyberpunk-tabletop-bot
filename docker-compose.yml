@@ -1,5 +1,8 @@
 version: "3.1"
 
+volumes:
+  app_node_modules:
+
 services:
 
   db:
@@ -13,8 +16,17 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+  app:
+    container_name: cyberpunk_app
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    env_file:
+      - ./mysqlVars.env
+      - ./discord.env
+    environment:
+      DB_HOST: db
+    volumes:
+      - app_node_modules:/home/cyberunk/app/node_modules/

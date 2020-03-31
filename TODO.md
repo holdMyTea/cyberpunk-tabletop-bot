@@ -1,8 +1,8 @@
 - ~~Draft the roll command~~
 - ~~Comments~~
 - Remove hardcoded Bot token
-- Add a DB
+- ~~Add a DB~~
 - Add DB schema
 - ~~ESLint & WebPack~~
-- Dockerize this
+- ~~Dockerize this~~
 - Add Keanu gif
