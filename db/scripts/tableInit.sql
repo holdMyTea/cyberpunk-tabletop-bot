@@ -2,7 +2,7 @@ USE cyberpunk;
 
 CREATE TABLE attributes (
   id INT(2) UNSIGNED PRIMARY KEY,
-  name VARCHAR(10) 
+  name VARCHAR(10) NOT NULL
 );
 
 INSERT INTO attributes (id, name) VALUES
@@ -139,3 +139,32 @@ INSERT INTO skills (name, attribute_id) VALUES
   ('Медтехника',NULL),
   ('Ресурсы',NULL),
   ('Блат',NULL);
+
+CREATE TABLE users (
+  id INT(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(40) NOT NULL,
+  discord_id VARCHAR(40) NOT NULL
+);
+
+CREATE TABLE characters (
+  id INT(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(80) NOT NULL,
+  user_id INT(8) UNSIGNED,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+CREATE TABLE char_attrs (
+  attr_value INT(2) UNSIGNED NOT NULL,
+  attribute_id INT(2) UNSIGNED,
+  char_id INT(8) UNSIGNED,
+  FOREIGN KEY (attribute_id) REFERENCES attributes(id) ON DELETE SET NULL,
+  FOREIGN KEY (char_id) REFERENCES characters(id) ON DELETE SET NULL
+);
+
+CREATE TABLE char_skills (
+  skill_value INT(2) UNSIGNED NOT NULL,
+  skill_id INT(4) UNSIGNED,
+  char_id INT(8) UNSIGNED,
+  FOREIGN KEY (skill_id) REFERENCES skills(id) ON DELETE SET NULL,
+  FOREIGN KEY (char_id) REFERENCES characters(id) ON DELETE SET NULL
+);

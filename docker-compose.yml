@@ -30,3 +30,9 @@ services:
       DB_HOST: db
     volumes:
       - app_node_modules:/home/cyberunk/app/node_modules/
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
