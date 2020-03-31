@@ -5,9 +5,9 @@ volumes:
 
 services:
 
-  db:
+  cyberpunk_db:
     container_name: cyberpunk_db
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_0900_ai_ci
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_0900_ai_ci --default-authentication-plugin=mysql_native_password
     build:
       context: ./db
       dockerfile: Dockerfile
@@ -16,18 +16,18 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
 
-  app:
+  cyberpunk_app:
     container_name: cyberpunk_app
     build:
       context: ./
       dockerfile: Dockerfile
     depends_on:
-      - db
+      - cyberpunk_db
     env_file:
       - ./mysqlVars.env
       - ./discord.env
     environment:
-      DB_HOST: db
+      DB_HOST: cyberpunk_db
     volumes:
       - app_node_modules:/home/cyberunk/app/node_modules/
 

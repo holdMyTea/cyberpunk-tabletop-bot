@@ -5,6 +5,7 @@ import env from '../config'
 const connection = mysql.createConnection({
   host: env.DB_HOST,
   port: 3306,
+  charset: 'utf8mb4',
   user: env.MYSQL_USER,
   password: env.MYSQL_PASSWORD,
   database: env.MYSQL_DATABASE

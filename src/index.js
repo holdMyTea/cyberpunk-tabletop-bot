@@ -28,5 +28,15 @@ client.on('message', message => {
 })
 
 db.connectToDatabase(
-  () => console.log('Hello, db!!1')
+  (err) => {
+    if (err) {
+      console.error(err)
+      return
+    }
+
+    console.log('Hello, db!!1')
+    db.query('SELECT * FROM skills WHERE id=42;')
+      .then(data => console.log(data))
+      .catch(error => console.error(error))
+  }
 )
