@@ -1,0 +1,20 @@
+version: "3.1"
+
+services:
+
+  db:
+    container_name: cyberpunk_db
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_0900_ai_ci
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    env_file:
+      - ./mysqlVars.env
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
