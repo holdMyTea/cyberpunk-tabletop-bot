@@ -15,13 +15,13 @@ client.on('ready', () => {
 })
 
 client.on('message', message => {
+  // skipping bot's own messages
   if (message.author === client.user) {
     return
   }
 
+  // processing commands only
   if (message.content.startsWith('!')) {
     processCommand(message)
   }
 })
-
-client.login(botSecretToken)

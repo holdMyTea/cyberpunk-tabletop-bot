@@ -1,4 +1,6 @@
-- Draft the roll command
+- ~~Draft the roll command~~
+- ~~Comments~~
+- Remove hardcoded Bot token
 - Add a DB
 - Add DB schema
 - ~~ESLint & WebPack~~

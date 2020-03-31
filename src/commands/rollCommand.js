@@ -1,14 +1,14 @@
 import { rollD10 } from '../utils/diceRolls'
 
-const formatter = createMessageFormatter()
+const formatMessage = createMessageFormatter()
 
 const processRoll = (message, args) => {
   const [user, attribute, skill] = args
 
   console.log('Roll command with the following args: ' + args)
 
-  const discUser = message.mentions
-  console.log(discUser)
+  // const discUser = message.mentions
+  // console.log(discUser)
 
   const charName = 'Billy'
   const attrValue = 7
@@ -17,7 +17,7 @@ const processRoll = (message, args) => {
   const diceRoll = rollD10()
 
   message.channel.send(
-    formatter(
+    formatMessage(
       charName,
       attribute,
       attrValue,
