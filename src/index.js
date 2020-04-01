@@ -35,7 +35,7 @@ db.connectToDatabase(
     }
 
     console.log('Hello, db!!1')
-    db.query('SELECT * FROM skills WHERE id=42;')
+    db.query('SELECT * FROM skills WHERE name="История";')
       .then(data => console.log(data))
       .catch(error => console.error(error))
   }
