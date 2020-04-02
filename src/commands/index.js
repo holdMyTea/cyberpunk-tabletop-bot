@@ -1,5 +1,5 @@
 import { processRoll } from './rollCommand'
-import { printUnassignedCharacters, assignCharacter } from './characterCommands'
+import { printUnassignedCharacters, assignCharacter, printCurrentCharacter } from './characterCommands'
 import { processDummy } from './dummyCommands'
 
 const processCommand = message => {
@@ -19,6 +19,10 @@ const processCommand = message => {
 
     case 'pick':
       assignCharacter(message, args)
+      break
+
+    case 'myChar':
+      printCurrentCharacter(message)
       break
 
     default: processDummy(message)

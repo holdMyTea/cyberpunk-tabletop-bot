@@ -67,7 +67,27 @@ const assignCharacter = (message, args) => {
     })
 }
 
+/**
+ * Prints the atuhor's currently assigned char's name.
+ * @param {Object} message - Discord message
+ */
+const printCurrentCharacter = message => {
+  const { id } = message.author
+
+  db.query(`
+    SELECT name FROM characters WHERE user_id=(SELECT id FROM users WHERE discord_id='${id}');
+  `)
+    .then(data => {
+      if (data.length === 0) {
+        message.reply('You don\'t have a character :worried:')
+      } else if (data.length === 1) {
+        message.reply(`You're playing as ${data[0].name}`)
+      }
+    })
+}
+
 export {
   printUnassignedCharacters,
-  assignCharacter
+  assignCharacter,
+  printCurrentCharacter
 }
