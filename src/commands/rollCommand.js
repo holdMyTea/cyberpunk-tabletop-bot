@@ -1,34 +1,31 @@
 import { rollD10 } from '../utils/diceRolls'
+import db from '../db'
 
 const formatMessage = createMessageFormatter()
 
 const processRoll = (message, args) => {
   const [user, attribute, skill] = args
 
-  console.log('Roll command with the following args: ' + args)
+  const discordId = user.slice(3, user.length - 1)
 
-  // const discUser = message.mentions
-  // console.log(discUser)
+  fetchCharacterStats(discordId, attribute, skill)
+    .then(data => {
+      const { charName, attrValue, skillValue } = data[0]
 
-  const charName = 'Billy'
-  const attrValue = 7
-  const skillValue = 6
-
-  const diceRoll = rollD10()
-
-  message.channel.send(
-    formatMessage(
-      charName,
-      attribute,
-      attrValue,
-      skill,
-      skillValue,
-      diceRoll
-    )
-  )
+      message.channel.send(
+        formatMessage(
+          charName,
+          attribute,
+          attrValue,
+          skill,
+          skillValue || 0,
+          rollD10()
+        )
+      )
+    })
 }
 
-function createMessageFormatter (lineWidth = 15) {
+function createMessageFormatter (lineWidth = 40) {
   const formatLine = (left, right) =>
     left + ':'.padEnd(lineWidth - (left.length + right.length + 1)) + right + '\n'
 
@@ -55,6 +52,24 @@ function createMessageFormatter (lineWidth = 15) {
   }
 
   return formatMessage
+}
+
+function fetchCharacterStats (discordId, attribute, skill) {
+  return db.query(`
+  SELECT
+    c.name AS 'charName',
+    chatt.attr_value AS 'attrValue',
+    chski.skill_value as 'skillValue'
+  FROM characters c
+    LEFT JOIN char_attrs chatt ON chatt.char_id = c.id
+    LEFT JOIN (
+      SELECT * FROM char_skills WHERE skill_id=(
+        SELECT id FROM skills WHERE name='${skill}'
+      )
+    ) chski ON chski.char_id = c.id
+  WHERE c.user_id = (SELECT id FROM users WHERE discord_id="${discordId}") 
+    AND chatt.attribute_id = (SELECT id FROM attributes WHERE name="${attribute}");
+  `)
 }
 
 export {
