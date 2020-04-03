@@ -9,20 +9,24 @@ const processRoll = (message, args) => {
     return
   }
 
-  const [user, attribute, skill, modifier = ''] = args
+  const [user, attribute, shortSkillNotation, modifier = ''] = args
 
   const discordId = user.slice(3, user.length - 1)
 
-  fetchCharacterStats(discordId, attribute, skill)
+  fetchCharacterStats(discordId, attribute, shortSkillNotation)
     .then(data => {
-      const { charName, attrValue, skillValue } = data[0]
+      if (data.length === 0) {
+        message.channel.send('Do you have a char? :cry:')
+      }
+
+      const { charName, attrValue, fullSkillName, skillValue } = data[0]
 
       message.channel.send(
         formatMessage(
           charName,
           attribute,
           attrValue,
-          skill,
+          fullSkillName,
           skillValue || 0,
           rollD10(),
           modifier
@@ -68,26 +72,31 @@ function createMessageFormatter (lineWidth = 40) {
 
 /**
  * Fetches the db for the attr and skill values of the character
- * assigned to the discord user (by means of a 6-story select)
+ * assigned to the discord user (by means of a 6-story select) and
+ * the full name of the skill.
  * @param {string} discordId - ID of the discord user
  * @param {string} attribute - name of the attribute
- * @param {string} skill - name of the skill
+ * @param {string} shortSkillNotation - short name of the skill
  */
-function fetchCharacterStats (discordId, attribute, skill) {
+function fetchCharacterStats (discordId, attribute, shortSkillNotation) {
   return db.query(`
-    SELECT
-      c.name AS 'charName',
-      chatt.attr_value AS 'attrValue',
-      chski.skill_value as 'skillValue'
-    FROM characters c
-      LEFT JOIN char_attrs chatt ON chatt.char_id = c.id
-      LEFT JOIN (
-        SELECT * FROM char_skills WHERE skill_id=(
-          SELECT id FROM skills WHERE name='${skill}'
-        )
-      ) chski ON chski.char_id = c.id
-    WHERE c.user_id = (SELECT id FROM users WHERE discord_id="${discordId}") 
-      AND chatt.attribute_id = (SELECT id FROM attributes WHERE name="${attribute}");
+    SELECT s1.charName, s1.attrValue, s1.skillValue, s2.name as 'fullSkillName' FROM
+      (
+        SELECT
+          c.name AS 'charName',
+          chatt.attr_value AS 'attrValue',
+          chski.skill_value as 'skillValue'
+        FROM characters c
+          LEFT JOIN char_attrs chatt ON chatt.char_id = c.id
+          LEFT JOIN (
+            SELECT * FROM char_skills WHERE skill_id=(
+              SELECT id FROM skills WHERE name='${shortSkillNotation}'
+          )
+          ) chski ON chski.char_id = c.id
+        WHERE c.user_id = (SELECT id FROM users WHERE discord_id='${discordId}') 
+          AND chatt.attribute_id = (SELECT id FROM attributes WHERE name='${attribute}')
+      ) s1, 
+      (select name from skills WHERE short_name='${shortSkillNotation}') s2;
   `)
 }
 
