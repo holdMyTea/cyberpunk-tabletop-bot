@@ -28,7 +28,7 @@ const printSkillList = (message, args) => {
       data.forEach(row => {
         reply += `${row.skillName} | ${row.skillShortName} | ${row.attributeName}\n`
       })
-      message.reply(reply)
+      message.reply(reply, { split: true })
     })
 }
 
