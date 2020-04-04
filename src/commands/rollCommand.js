@@ -16,7 +16,8 @@ const processRoll = (message, args) => {
   fetchCharacterStats(discordId, attribute, shortSkillNotation)
     .then(data => {
       if (data.length === 0) {
-        message.channel.send('Do you have a char? :cry:')
+        message.channel.send('Stap!!1 :cry:')
+        return
       }
 
       const { charName, attrValue, fullSkillName, skillValue } = data[0]
@@ -90,8 +91,8 @@ function fetchCharacterStats (discordId, attribute, shortSkillNotation) {
           LEFT JOIN char_attrs chatt ON chatt.char_id = c.id
           LEFT JOIN (
             SELECT * FROM char_skills WHERE skill_id=(
-              SELECT id FROM skills WHERE name='${shortSkillNotation}'
-          )
+              SELECT id FROM skills WHERE short_name='${shortSkillNotation}'
+            )
           ) chski ON chski.char_id = c.id
         WHERE c.user_id = (SELECT id FROM users WHERE discord_id='${discordId}') 
           AND chatt.attribute_id = (SELECT id FROM attributes WHERE name='${attribute}')
