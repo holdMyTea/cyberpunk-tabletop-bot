@@ -53,6 +53,13 @@ INSERT INTO skills (name, short_name, attribute_id) VALUES
   ('зоология', 'зоо', 1),
   ('композиция', 'композ', 1);
 
+-- custom INT skills
+INSERT INTO skills (name, short_name, attribute_id) VALUES
+  ('итальянский язык', 'итал', 1),
+  ('китайский язык', 'китай', 1),
+  ('японсикй язык', 'япон', 1),
+  ('русский язык', 'русс', 1);
+
 -- REF skills
 INSERT INTO skills (name, short_name, attribute_id) VALUES
   ('лук/арбалет', 'лук', 2),
