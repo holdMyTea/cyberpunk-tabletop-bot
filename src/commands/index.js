@@ -1,5 +1,6 @@
 import { processRoll } from './rollCommand'
 import { printUnassignedCharacters, assignCharacter, printCurrentCharacter } from './characterCommands'
+import { printSkillList, findSkill } from './helpCommands'
 import { processDummy } from './dummyCommands'
 
 const processCommand = message => {
@@ -23,6 +24,14 @@ const processCommand = message => {
 
     case 'myChar':
       printCurrentCharacter(message)
+      break
+
+    case 'skills':
+      printSkillList(message, args)
+      break
+
+    case 'skill':
+      findSkill(message, args)
       break
 
     default: processDummy(message)
