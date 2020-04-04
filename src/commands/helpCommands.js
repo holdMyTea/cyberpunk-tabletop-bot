@@ -1,5 +1,11 @@
 import db from '../db'
 
+/**
+ * Prints the lis of all skills,
+ * if there's an ATTR provided will skills with ATTR only.
+ * @param {Object} message - Discord message
+ * @param {string[]} args - command args
+ */
 const printSkillList = (message, args) => {
   const [attribute] = args
 
@@ -26,6 +32,11 @@ const printSkillList = (message, args) => {
     })
 }
 
+/**
+ * Looks up the short name of the skill by query.
+ * @param {Object} message - Discord message
+ * @param {string[]} args - command args
+ */
 const findSkill = (message, args) => {
   const [query] = args
 

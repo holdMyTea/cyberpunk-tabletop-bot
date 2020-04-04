@@ -3,9 +3,20 @@ import db from '../db'
 
 const formatMessage = createMessageFormatter()
 
+/**
+ * Accepts user mention, attribute, skill and [modifier],
+ * looks up char assigned to user, pulls his attr and skill stats,
+ * rolls the dice, and prints all this out.
+ * @param {Object} message - Discord message
+ * @param {string[]} args - command args
+ */
 const processRoll = (message, args) => {
   if (message.mentions.users.size !== 1) {
     message.reply('You must tag one player :angry:')
+    return
+  }
+  if (message.length < 3) {
+    message.reply('Stap!!1 :cry:')
     return
   }
 
@@ -16,7 +27,7 @@ const processRoll = (message, args) => {
   fetchCharacterStats(discordId, attribute, shortSkillNotation)
     .then(data => {
       if (data.length === 0) {
-        message.channel.send('Stap!!1 :cry:')
+        message.reply('Stap!!1 :cry:')
         return
       }
 
@@ -80,6 +91,7 @@ function createMessageFormatter (lineWidth = 40) {
  * @param {string} shortSkillNotation - short name of the skill
  */
 function fetchCharacterStats (discordId, attribute, shortSkillNotation) {
+  // i am not proud of this query, relative db gods forgive me
   return db.query(`
     SELECT s1.charName, s1.attrValue, s1.skillValue, s2.name as 'fullSkillName' FROM
       (
