@@ -39,7 +39,7 @@ const assignCharacter = (message, args) => {
   const { id, username } = message.author
 
   if (Number.isNaN(Number.parseInt(characterID))) {
-    message.channel.send('Invalid character ID :angry:')
+    message.reply('Invalid character ID :angry:')
     return
   }
 

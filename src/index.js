@@ -6,24 +6,7 @@ import processCommand from './commands'
 
 const client = new Discord.Client()
 
-db.connectToDatabase(
-  (err) => {
-    if (err) {
-      console.error(err)
-      return
-    }
-
-    console.log('DB connected')
-    client.login(env.BOT_SECRET_TOKEN)
-  }
-)
-
-client.on('ready', () => {
-  console.log('Bot connected as ' + client.user.tag)
-
-  client.channels.fetch('694120472048041994')
-    .then(channel => channel.send('Wake the fuck up, Samurai'))
-})
+client.on('ready', () => console.log('Bot connected as ' + client.user.tag))
 
 client.on('message', message => {
   // skipping bot's own messages
@@ -36,3 +19,15 @@ client.on('message', message => {
     processCommand(message)
   }
 })
+
+db.connectToDatabase(
+  (err) => {
+    if (err) {
+      console.error(err)
+      return
+    }
+
+    console.log('DB connected')
+    client.login(env.BOT_SECRET_TOKEN)
+  }
+)

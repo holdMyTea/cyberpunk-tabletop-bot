@@ -109,7 +109,7 @@ function fetchCharacterStats (discordId, attribute, shortSkillNotation) {
         WHERE c.user_id = (SELECT id FROM users WHERE discord_id='${discordId}') 
           AND chatt.attribute_id = (SELECT id FROM attributes WHERE name='${attribute}')
       ) s1, 
-      (select name from skills WHERE short_name='${shortSkillNotation}') s2;
+      (SELECT name FROM skills WHERE short_name='${shortSkillNotation}') s2;
   `)
 }
 

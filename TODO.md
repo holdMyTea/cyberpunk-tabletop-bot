@@ -7,4 +7,4 @@
 - ~~Dockerize this~~
 - ~~Check DB fetching~~
 - ~~Complete roll command~~
-- Add Keanu gif
+- ~~Add Keanu gif~~
