@@ -2,6 +2,7 @@ import { processRoll } from './rollCommand'
 import { printUnassignedCharacters, assignCharacter, printCurrentCharacter } from './characterCommands'
 import { printSkillList, findSkill } from './helpCommands'
 import { processDummy } from './dummyCommands'
+import { processEquipCommand } from './weaponCommands'
 
 const processCommand = message => {
   // splitting command into args
@@ -32,6 +33,10 @@ const processCommand = message => {
 
     case 'skill':
       findSkill(message, args)
+      break
+
+    case 'equip':
+      processEquipCommand(message, args)
       break
 
     default: processDummy(message)

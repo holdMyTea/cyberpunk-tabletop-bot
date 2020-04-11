@@ -76,3 +76,10 @@ INSERT INTO weapons (
     (SELECT id FROM weapon_reliability WHERE abbr = 'ST'),
     '50m'
   );
+
+  CREATE TABLE equipped_weapons (
+    char_id INT(8) UNSIGNED UNIQUE,
+    FOREIGN KEY (char_id) REFERENCES characters(id) ON DELETE SET NULL,
+    weapon_id INT(4) UNSIGNED,
+    FOREIGN KEY (weapon_id) REFERENCES weapons(id) ON DELETE SET NULL
+  );

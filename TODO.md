@@ -1,10 +1,6 @@
-- ~~Draft the roll command~~
-- ~~Comments~~
-- ~~Remove hardcoded Bot token~~
-- ~~Add a DB~~
-- ~~Add DB schema~~
-- ~~ESLint & WebPack~~
-- ~~Dockerize this~~
-- ~~Check DB fetching~~
-- ~~Complete roll command~~
-- ~~Add Keanu gif~~
+- ~~Weapon tables~~
+- Weapon equipment
+- Shoot rolls
+- Ammo count & reolads???
+- Comments
+- Optimize (at least try to) SQL queries
