@@ -1,5 +1,5 @@
 - ~~Weapon tables~~
-- Weapon equipment
+- ~~Weapon equipment~~
 - Shoot rolls
 - Ammo count & reolads???
 - Comments

@@ -12,20 +12,31 @@ const processEquipCommand = (message, args) => {
   if (args.length === 0) {
     printCurrentWeapon(message, id)
   } else {
-    equipWeapon(message, id, args[0])
+    equipWeapon(message, id, args.join(' '))
   }
 }
 
+/**
+ * Runs query to db and prints the currently equipped weapon of the character.
+ * In case there is no weapon or no character assigned replies with error.
+ * @param {Object} message - Discord message
+ * @param {string} discordId - Discord ID of the author
+ */
 function printCurrentWeapon (message, discordId) {
   db.query(`
-    SELECT c.name AS 'characterName', w.name AS 'weaponName' FROM characters c
-    LEFT JOIN equipped_weapons ew ON c.id=ew.char_id
-    LEFT JOIN weapons w ON ew.weapon_id=w.id
-    WHERE c.user_id=(
-      SELECT id FROM users WHERE discord_id='${discordId}'
-    )
+    SELECT
+      c.name AS 'characterName',
+      w.name AS 'weaponName',
+      wt.name AS 'weaponType'
+    FROM characters c
+      LEFT JOIN equipped_weapons ew ON c.id=ew.char_id
+      LEFT JOIN weapons w ON ew.weapon_id=w.id
+      LEFT JOIN weapon_types wt ON w.weapon_type_id=wt.id
+      WHERE c.user_id=(
+        SELECT id FROM users WHERE discord_id='${discordId}'
+      )
   `).then(data => {
-    const { weaponName, characterName } = data[0]
+    const { characterName, weaponName, weaponType } = data[0]
 
     if (!characterName) {
       message.reply('You need to pick character first!!1 :angry:')
@@ -37,12 +48,29 @@ function printCurrentWeapon (message, discordId) {
       return
     }
 
-    message.reply(`${characterName} is currently armed with ${weaponName}`)
+    message.reply(`${characterName} is currently armed with ${weaponName} (${weaponType})`)
   })
 }
 
+/**
+ * Looks up weapon by name using the `weaponQuery` param and equips it for
+ * current user's character. Then calls `printCurrentWeapon` to output the
+ * current weapon for the user.
+ * @param {Object} message - Discord message
+ * @param {string} discordId - Discord ID of th user
+ * @param {string} weaponQuery - query to find weapon by name
+ */
 function equipWeapon (message, discordId, weaponQuery) {
-
+  db.query(`
+    INSERT INTO equipped_weapons(char_id, weapon_id) VALUES(
+      (SELECT id FROM characters WHERE user_id=(
+        SELECT id FROM users WHERE discord_id='${discordId}'
+      )),
+      (SELECT id FROM weapons WHERE name LIKE '%${weaponQuery}%')
+    ) ON DUPLICATE KEY UPDATE weapon_id=VALUES(weapon_id)
+  `).then(() => {
+    printCurrentWeapon(message, discordId)
+  })
 }
 
 export {
