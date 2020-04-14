@@ -3,6 +3,7 @@ import { printUnassignedCharacters, assignCharacter, printCurrentCharacter } fro
 import { printSkillList, findSkill } from './helpCommands'
 import { processDummy } from './dummyCommands'
 import { processEquipCommand } from './weaponCommands'
+import { processShootCommand } from './shootCommand'
 
 const processCommand = message => {
   // splitting command into args
@@ -37,6 +38,10 @@ const processCommand = message => {
 
     case 'equip':
       processEquipCommand(message, args)
+      break
+
+    case 'shoot':
+      processShootCommand(message)
       break
 
     default: processDummy(message)

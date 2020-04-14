@@ -4,3 +4,4 @@
 - Ammo count & reolads???
 - Comments
 - Optimize (at least try to) SQL queries
+- TODOs

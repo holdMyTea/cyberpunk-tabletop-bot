@@ -114,5 +114,6 @@ function fetchCharacterStats (discordId, attribute, shortSkillNotation) {
 }
 
 export {
-  processRoll
+  processRoll,
+  fetchCharacterStats
 }
