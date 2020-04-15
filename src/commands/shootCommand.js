@@ -1,52 +1,93 @@
 import db from '../db'
-import { rollD10 } from '../utils/diceRolls'
-import { fetchCharacterStats } from './rollCommand'
+import { rollD10, rollDice } from '../utils/diceRolls'
 
 // TODO: add a formatter (probably in a separate file)
-// TODO: refactor queries, here are double or even triple fetches of the same data
 
 // 1. Make a skill roll for REF + weapon sill + d10
 // 2. Make a roll for weapon's damage
 // 3. Make a roll for enemy's hit area
 const processShootCommand = (message) => {
   const discordId = message.author.id
-  let response = ''
 
-  fetchStatsForHitRoll(discordId)
+  fetchShootStats(discordId)
     .then(data => {
-      const { charName, attrValue, fullSkillName, skillValue } = data
+      const {
+        weaponName,
+        weaponDamageStat,
+        weaponType,
+        weaponAccuracy,
+        characterName,
+        skillName,
+        skillValue,
+        refValue
+      } = data
+
       const d10 = rollD10()
-      response += '```' +
-       `${charName} shoots:\n` +
-       `REF: ${attrValue}\n` +
-       `${fullSkillName}: ${skillValue || 0}\n` +
-       `d10: ${d10}\n` +
-       `TOTAL: ${attrValue + skillValue + d10}\n` +
-       '```'
-    })
-    .then(() => {
+
+      let response = `${characterName} shoots their ${weaponName} (${weaponType}):\n` +
+        '```\n' +
+        `REF: ${refValue}\n` +
+        `${skillName}: ${skillValue || 0}\n` +
+        `Weapon accuracy: ${weaponAccuracy}\n` +
+        `d10: ${d10}\n` +
+        `HIT ROLL TOTAL: ${refValue + skillValue + weaponAccuracy + d10}\n` +
+        '```'
+
+      const { damageTotal, damageRolls, constModifier } = rollDamage(weaponDamageStat)
+      console.log(damageRolls)
+      response += 'Damage roll:\n' +
+        '```' +
+        `${weaponName} damage is ${weaponDamageStat}:\n` +
+        `${damageRolls.join(' + ')}${constModifier ? ' + ' + constModifier : ''}\n` +
+        `DAMAGE TOTAL: ${damageTotal}` +
+        '```'
       message.channel.send(response)
     })
 }
 
-// TODO: add weapon accuracy to the roll
-function fetchStatsForHitRoll (discordId) {
+function fetchShootStats (discordId) {
   return db.query(`
-    SELECT short_name AS 'weaponSkillName' FROM skills WHERE id=(
-      SELECT skill_id FROM weapon_types WHERE id=(
-        SELECT weapon_type_id FROM weapons WHERE id=(
-          SELECT weapon_id FROM equipped_weapons WHERE char_id=(
-            SELECT id FROM characters WHERE user_id=(
-              SELECT id FROM users WHERE discord_id='${discordId}'
-            )
-          )
-        )
+    SELECT
+      w.name AS 'weaponName',
+      w.damage AS 'weaponDamageStat',
+      wt.name AS 'weaponType',
+      w.accuracy AS 'weaponAccuracy',
+      c.name AS 'characterName',
+      s.name AS 'skillName',
+      cs.skill_value AS 'skillValue',
+      ca.attr_value AS 'refValue'
+    FROM weapons w
+      LEFT JOIN weapon_types wt ON w.weapon_type_id=wt.id
+      LEFT JOIN equipped_weapons eq ON w.id=eq.weapon_id
+      LEFT JOIN skills s ON wt.skill_id=s.id
+      LEFT JOIN characters c ON eq.char_id=c.id
+      LEFT JOIN char_skills cs ON cs.skill_id=wt.skill_id AND cs.char_id=c.id
+      LEFT JOIN char_attrs ca ON ca.char_id=c.id AND ca.attribute_id=(
+        SELECT id FROM attributes WHERE name='REF'
       )
-    )
-  `).then(data => {
-    const { weaponSkillName } = data[0]
-    return fetchCharacterStats(discordId, 'REF', weaponSkillName)
-  }).then(data => data[0])
+    WHERE c.user_id=(SELECT id FROM users WHERE discord_id='${discordId}')
+  `).then(data => data[0])
+}
+
+function rollDamage (damageStat) {
+  const [diceRolls, modifier] = damageStat.split('+')
+  const [rollsNumber, sides] = diceRolls.split('D')
+
+  const rolls = []
+  let r
+  let total = 0
+  for (let i = 0; i < rollsNumber; i++) {
+    r = rollDice(sides)
+    rolls.push(r)
+    total += r
+  }
+  total += Number.parseInt(modifier) || 0
+
+  return {
+    damageTotal: total,
+    damageRolls: rolls,
+    constModifier: modifier
+  }
 }
 
 export {

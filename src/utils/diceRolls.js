@@ -4,6 +4,7 @@ const rollD6 = () => rollDice(6)
 const rollD10 = () => rollDice(10)
 
 export {
+  rollDice,
   rollD6,
   rollD10
 }

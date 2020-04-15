@@ -5,3 +5,4 @@
 - Comments
 - Optimize (at least try to) SQL queries
 - TODOs
+- Update README.md and the screenshot
