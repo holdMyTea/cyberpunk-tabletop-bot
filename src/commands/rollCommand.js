@@ -1,7 +1,6 @@
 import { rollD10 } from '../utils/diceRolls'
 import db from '../db'
-
-const formatMessage = createMessageFormatter()
+import { formatRollMessage } from '../utils/outputFormatter'
 
 /**
  * Accepts user mention, attribute, skill and [modifier],
@@ -34,7 +33,7 @@ const processRoll = (message, args) => {
       const { charName, attrValue, fullSkillName, skillValue } = data[0]
 
       message.channel.send(
-        formatMessage(
+        formatRollMessage(
           charName,
           attribute,
           attrValue,
@@ -45,41 +44,6 @@ const processRoll = (message, args) => {
         )
       )
     })
-}
-
-function createMessageFormatter (lineWidth = 40) {
-  const formatLine = (left, right) =>
-    left + ':'.padEnd(lineWidth - (left.length + right.length + 1)) + right + '\n'
-
-  /**
-   * Formats the roll message and calculates total.
-   * @param {string} charName - name of the character
-   * @param {string} attribute - name of the attribute
-   * @param {number} attrValue - attribute's value
-   * @param {string} skill - name of the skill
-   * @param {number} skillValue - skill's value
-   * @param {number} diceRoll - value of the dice roll
-   * @returns {string} formatted message
-   */
-  const formatMessage = (charName, attribute, attrValue, skill, skillValue, diceRoll, modifier = '') => {
-    const intModifier = Number.parseInt(modifier)
-
-    const total = Number.isNaN(intModifier)
-      ? attrValue + skillValue + diceRoll
-      : attrValue + skillValue + diceRoll + intModifier
-
-    return '```\n' +
-      `${charName} rolls:\n` +
-      formatLine(attribute, attrValue.toString()) +
-      formatLine(skill, skillValue.toString()) +
-      formatLine('d10', diceRoll.toString()) +
-      (Number.isNaN(intModifier) ? '' : formatLine('Modifier', modifier)) +
-      ''.padEnd(lineWidth, '-') + '\n' +
-      formatLine('Total', total.toString()) +
-      '```\n'
-  }
-
-  return formatMessage
 }
 
 /**

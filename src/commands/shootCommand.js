@@ -1,5 +1,6 @@
 import db from '../db'
 import { rollD10, rollDice } from '../utils/diceRolls'
+import { createShootFormatter } from '../utils/outputFormatter'
 
 // TODO: add a formatter (probably in a separate file)
 
@@ -24,24 +25,31 @@ const processShootCommand = (message) => {
 
       const d10 = rollD10()
 
-      let response = `${characterName} shoots their ${weaponName} (${weaponType}):\n` +
-        '```\n' +
-        `REF: ${refValue}\n` +
-        `${skillName}: ${skillValue || 0}\n` +
-        `Weapon accuracy: ${weaponAccuracy}\n` +
-        `d10: ${d10}\n` +
-        `HIT ROLL TOTAL: ${refValue + skillValue + weaponAccuracy + d10}\n` +
-        '```'
+      const formatter = createShootFormatter()
+      formatter.initializeShootMessage(
+        characterName,
+        weaponName,
+        weaponType
+      )
 
-      const { damageTotal, damageRolls, constModifier } = rollDamage(weaponDamageStat)
-      console.log(damageRolls)
-      response += 'Damage roll:\n' +
-        '```' +
-        `${weaponName} damage is ${weaponDamageStat}:\n` +
-        `${damageRolls.join(' + ')}${constModifier ? ' + ' + constModifier : ''}\n` +
-        `DAMAGE TOTAL: ${damageTotal}` +
-        '```'
-      message.channel.send(response)
+      formatter.appendHitRoll(
+        refValue,
+        skillName,
+        skillValue || 0,
+        weaponAccuracy,
+        d10
+      )
+
+      const { damageTotal, damageRolls, damnageConstPart } = rollDamage(weaponDamageStat)
+      formatter.appendDamageRoll(
+        weaponName,
+        weaponDamageStat,
+        damageTotal,
+        damageRolls,
+        damnageConstPart
+      )
+
+      message.channel.send(formatter.message)
     })
 }
 
@@ -86,7 +94,7 @@ function rollDamage (damageStat) {
   return {
     damageTotal: total,
     damageRolls: rolls,
-    constModifier: modifier
+    damnageConstPart: modifier
   }
 }
 

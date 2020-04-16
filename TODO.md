@@ -1,6 +1,7 @@
 - ~~Weapon tables~~
 - ~~Weapon equipment~~
 - Shoot rolls
+- Add the rest of the weapons
 - Ammo count & reolads???
 - Comments
 - Optimize (at least try to) SQL queries
