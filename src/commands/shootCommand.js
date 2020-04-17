@@ -2,13 +2,21 @@ import db from '../db'
 import { rollD10, rollDice } from '../utils/diceRolls'
 import { createShootFormatter } from '../utils/outputFormatter'
 
-// TODO: add a formatter (probably in a separate file)
-
 // 1. Make a skill roll for REF + weapon sill + d10
 // 2. Make a roll for weapon's damage
 // 3. Make a roll for enemy's hit area
-const processShootCommand = (message) => {
-  const discordId = message.author.id
+const processShootCommand = (message, args) => {
+  if (message.mentions.users.size !== 1) {
+    message.reply('You must tag one player :angry:')
+    return
+  }
+  if (args.length < 2) {
+    message.reply('Stap!!1 You must supply two arguments! :cry:')
+    return
+  }
+
+  const [user, hitRollRequirement] = args
+  const discordId = user.slice(3, user.length - 1)
 
   fetchShootStats(discordId)
     .then(data => {
@@ -23,7 +31,8 @@ const processShootCommand = (message) => {
         refValue
       } = data
 
-      const d10 = rollD10()
+      const hitRoll = rollD10()
+      const hitTotal = refValue + skillValue + weaponAccuracy + hitRoll
 
       const formatter = createShootFormatter()
       formatter.initializeShootMessage(
@@ -37,17 +46,30 @@ const processShootCommand = (message) => {
         skillName,
         skillValue || 0,
         weaponAccuracy,
-        d10
+        hitRoll,
+        hitTotal
       )
 
-      const { damageTotal, damageRolls, damnageConstPart } = rollDamage(weaponDamageStat)
-      formatter.appendDamageRoll(
-        weaponName,
-        weaponDamageStat,
-        damageTotal,
-        damageRolls,
-        damnageConstPart
-      )
+      if (hitTotal >= hitRollRequirement) {
+        const { damageTotal, damageRolls, damnageConstPart } = rollDamage(weaponDamageStat)
+        formatter.appendDamageRoll(
+          weaponName,
+          weaponDamageStat,
+          damageTotal,
+          damageRolls,
+          damnageConstPart
+        )
+
+        const hitAreaRoll = rollD10()
+        const hitArea = rollHitArea(hitAreaRoll)
+        formatter.appendHitAreaRoll(
+          characterName,
+          hitArea,
+          hitAreaRoll
+        )
+      } else {
+        formatter.appendMissMessage(characterName)
+      }
 
       message.channel.send(formatter.message)
     })
@@ -95,6 +117,32 @@ function rollDamage (damageStat) {
     damageTotal: total,
     damageRolls: rolls,
     damnageConstPart: modifier
+  }
+}
+
+function rollHitArea (d10) {
+  switch (d10) {
+    case 1:
+      return 'head'
+
+    case 2:
+    case 3:
+    case 4:
+      return 'torso'
+
+    case 5:
+      return 'right arm'
+
+    case 6:
+      return 'left arm'
+
+    case 7:
+    case 8:
+      return 'right leg'
+
+    case 9:
+    case 10:
+      return 'left leg'
   }
 }
 

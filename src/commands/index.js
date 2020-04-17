@@ -41,7 +41,7 @@ const processCommand = message => {
       break
 
     case 'shoot':
-      processShootCommand(message)
+      processShootCommand(message, args)
       break
 
     default: processDummy(message)

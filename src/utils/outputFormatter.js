@@ -31,6 +31,7 @@ const formatRollMessage = (charName, attribute, attrValue, skill, skillValue, di
     '```\n'
 }
 
+// TODO: comments here
 const createShootFormatter = () => {
   return {
     message: '',
@@ -38,8 +39,7 @@ const createShootFormatter = () => {
       this.message = '```' +
         `${characterName} shoots their ${weaponName} (${weaponType}):` + '```'
     },
-    appendHitRoll: function (refValue, skillName, skillValue, weaponAccuracy, d10) {
-      const total = refValue + skillValue + weaponAccuracy + d10
+    appendHitRoll: function (refValue, skillName, skillValue, weaponAccuracy, d10, hitTotal) {
       this.message +=
         'HIT ROLL:\n' +
         '```\n' +
@@ -48,7 +48,7 @@ const createShootFormatter = () => {
         formatLine('Weapon Accuracy', weaponAccuracy.toString()) +
         formatLine('d10', d10.toString()) +
         '```' +
-        `**HIT ROLL TOTAL: ${total}**\n`
+        `**HIT ROLL TOTAL: ${hitTotal}**\n`
     },
     appendDamageRoll: function (weaponName, weaponDamageStat, damageTotal, damageRolls, damnageConstPart) {
       this.message +=
@@ -58,6 +58,14 @@ const createShootFormatter = () => {
         `${damageRolls.join(' + ')}${damnageConstPart ? ' + ' + damnageConstPart : ''}\n` +
         '```' +
         `**DAMAGE ROLL TOTAL: ${damageTotal}**\n`
+    },
+    appendHitAreaRoll: function (characterName, hitArea, hitAreaRoll) {
+      this.message +=
+        `${characterName} hits enemy's ${hitArea} (${hitAreaRoll})`
+    },
+    appendMissMessage: function (characterName) {
+      this.message +=
+        `${characterName} misses their shots`
     }
   }
 }

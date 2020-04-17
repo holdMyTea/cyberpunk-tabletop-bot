@@ -6,4 +6,4 @@
 - Comments
 - Optimize (at least try to) SQL queries
 - TODOs
-- Update README.md and the screenshot
+- Update README.md and the screenshot and the !help command output

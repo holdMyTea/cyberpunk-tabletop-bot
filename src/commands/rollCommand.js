@@ -14,13 +14,12 @@ const processRoll = (message, args) => {
     message.reply('You must tag one player :angry:')
     return
   }
-  if (message.length < 3) {
-    message.reply('Stap!!1 :cry:')
+  if (args.length < 3) {
+    message.reply('Stap!!1 You must supply 3 or 4 arguments :cry:')
     return
   }
 
   const [user, attribute, shortSkillNotation, modifier = ''] = args
-
   const discordId = user.slice(3, user.length - 1)
 
   fetchCharacterStats(discordId, attribute, shortSkillNotation)
