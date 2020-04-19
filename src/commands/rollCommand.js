@@ -3,7 +3,8 @@ import db from '../db'
 import { formatRollMessage } from '../utils/outputFormatter'
 
 /**
- * Accepts user mention, attribute, skill and [modifier],
+ * Accepts user mention, attribute, shortSkillName and [modifier],
+ * i.e. `!roll @holdMyTea REF танцы -3`
  * looks up char assigned to user, pulls his attr and skill stats,
  * rolls the dice, and prints all this out.
  * @param {Object} message - Discord message

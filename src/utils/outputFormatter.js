@@ -1,5 +1,11 @@
+// line width for table-like formatted messages
 const lineWidth = 40
 
+/**
+ * Adds `left` to `right` with a semicolumn between, and pads it to the `lineWidth` length.]
+ * @param {string} left
+ * @param {string} right
+ */
 const formatLine = (left, right) =>
   left + ':'.padEnd(lineWidth - (left.length + right.length + 1)) + right + '\n'
 
@@ -31,14 +37,31 @@ const formatRollMessage = (charName, attribute, attrValue, skill, skillValue, di
     '```\n'
 }
 
-// TODO: comments here
+/**
+ * Creates a formatter for the Shoot message
+ */
 const createShootFormatter = () => {
-  return {
+  const shootFormatter = {
     message: '',
+    /**
+     * Sets the `message` to formatted string with char's name, weapon's name and type
+     * @param {string} characterName
+     * @param {string} weaponName
+     * @param {string} weaponType - weapon type, i.e. `Light Autopistol`
+     */
     initializeShootMessage: function (characterName, weaponName, weaponType) {
       this.message = '```' +
         `${characterName} shoots their ${weaponName} (${weaponType}):` + '```'
     },
+    /**
+     * Appends to the `message` hit roll additions and total
+     * @param {number} refValue - character's REF stat
+     * @param {string} skillName - full name of the skill
+     * @param {number} skillValue - values of character's `skillName`
+     * @param {number} weaponAccuracy - weapon's accuracy stat (WA)
+     * @param {number} d10 - d10 roll for hit
+     * @param {number} hitTotal - total hit roll value
+     */
     appendHitRoll: function (refValue, skillName, skillValue, weaponAccuracy, d10, hitTotal) {
       this.message +=
         'HIT ROLL:\n' +
@@ -50,6 +73,14 @@ const createShootFormatter = () => {
         '```' +
         `**HIT ROLL TOTAL: ${hitTotal}**\n`
     },
+    /**
+     * Appends to `message` damage rolls and total
+     * @param {string} weaponName
+     * @param {string} weaponDamageStat - weapon's damage, in format from rulebook, i.e. `1D6+3` or `4D6'
+     * @param {number} damageTotal - total sum of all `damageRolls`
+     * @param {number[]} damageRolls - array of dice rolls for weapon's damage
+     * @param {number|underfined} damnageConstPart - the `+3` part of `damageStat`
+     */
     appendDamageRoll: function (weaponName, weaponDamageStat, damageTotal, damageRolls, damnageConstPart) {
       this.message +=
         'DAMAGE ROLL:\n' +
@@ -59,15 +90,26 @@ const createShootFormatter = () => {
         '```' +
         `**DAMAGE ROLL TOTAL: ${damageTotal}**\n`
     },
+    /**
+     * Appends to `message` hit area and roll
+     * @param {string} characterName
+     * @param {string} hitArea - name os the are hit was made (i.e. `head`, `rigth arm`)
+     * @param {number} hitAreaRoll - d10 roll for hit area
+     */
     appendHitAreaRoll: function (characterName, hitArea, hitAreaRoll) {
       this.message +=
         `${characterName} hits enemy's ${hitArea} (${hitAreaRoll})`
     },
+    /**
+     * Appends to `message` miss notification
+     * @param {string} characterName
+     */
     appendMissMessage: function (characterName) {
       this.message +=
         `${characterName} misses their shots`
     }
   }
+  return shootFormatter
 }
 
 export {
