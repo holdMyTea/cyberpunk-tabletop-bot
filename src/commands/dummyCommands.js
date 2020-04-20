@@ -16,9 +16,11 @@ const processDummy = message => {
     case '!help':
       message.reply(
         '\n' +
-        '!roll @tag attr skill [mod] -- make a roll\n' +
         '!freeChars -- print list of unassigned characres\n' +
         '!pick charId -- pick a character\n' +
+        '!roll @tag attr skill [mod] -- make a roll\n' +
+        '!equip [weapon] -- prints current or equips new weapon' +
+        '!shoot @tag hitRequirement -- rolls shooting (hit, damage, and hit area)' +
         '!myChar -- print name of your current character\n' +
         '!skills [attr] -- print list of the skills\n' +
         '!skill query -- find short name of skill\n' +

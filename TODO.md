@@ -1,10 +1,8 @@
-- ~~Draft the roll command~~
+- ~~Weapon tables~~
+- ~~Weapon equipment~~
+- ~~Shoot rolls~~
+- ~~Add the rest of the weapons~~
+- ~~Ammo count & reolads???~~ (No, want to run it in real game first)
 - ~~Comments~~
-- ~~Remove hardcoded Bot token~~
-- ~~Add a DB~~
-- ~~Add DB schema~~
-- ~~ESLint & WebPack~~
-- ~~Dockerize this~~
-- ~~Check DB fetching~~
-- ~~Complete roll command~~
-- ~~Add Keanu gif~~
+- ~~TODOs~~
+- ~~Update README.md and the screenshot and the !help command output~~

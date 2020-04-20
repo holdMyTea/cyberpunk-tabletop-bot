@@ -1,10 +1,10 @@
 import { rollD10 } from '../utils/diceRolls'
 import db from '../db'
-
-const formatMessage = createMessageFormatter()
+import { formatRollMessage } from '../utils/outputFormatter'
 
 /**
- * Accepts user mention, attribute, skill and [modifier],
+ * Accepts user mention, attribute, shortSkillName and [modifier],
+ * i.e. `!roll @holdMyTea REF танцы -3`
  * looks up char assigned to user, pulls his attr and skill stats,
  * rolls the dice, and prints all this out.
  * @param {Object} message - Discord message
@@ -15,13 +15,12 @@ const processRoll = (message, args) => {
     message.reply('You must tag one player :angry:')
     return
   }
-  if (message.length < 3) {
-    message.reply('Stap!!1 :cry:')
+  if (args.length < 3) {
+    message.reply('Stap!!1 You must supply 3 or 4 arguments :cry:')
     return
   }
 
   const [user, attribute, shortSkillNotation, modifier = ''] = args
-
   const discordId = user.slice(3, user.length - 1)
 
   fetchCharacterStats(discordId, attribute, shortSkillNotation)
@@ -34,7 +33,7 @@ const processRoll = (message, args) => {
       const { charName, attrValue, fullSkillName, skillValue } = data[0]
 
       message.channel.send(
-        formatMessage(
+        formatRollMessage(
           charName,
           attribute,
           attrValue,
@@ -45,41 +44,6 @@ const processRoll = (message, args) => {
         )
       )
     })
-}
-
-function createMessageFormatter (lineWidth = 40) {
-  const formatLine = (left, right) =>
-    left + ':'.padEnd(lineWidth - (left.length + right.length + 1)) + right + '\n'
-
-  /**
-   * Formats the roll message and calculates total.
-   * @param {string} charName - name of the character
-   * @param {string} attribute - name of the attribute
-   * @param {number} attrValue - attribute's value
-   * @param {string} skill - name of the skill
-   * @param {number} skillValue - skill's value
-   * @param {number} diceRoll - value of the dice roll
-   * @returns {string} formatted message
-   */
-  const formatMessage = (charName, attribute, attrValue, skill, skillValue, diceRoll, modifier = '') => {
-    const intModifier = Number.parseInt(modifier)
-
-    const total = Number.isNaN(intModifier)
-      ? attrValue + skillValue + diceRoll
-      : attrValue + skillValue + diceRoll + intModifier
-
-    return '```\n' +
-      `${charName} rolls:\n` +
-      formatLine(attribute, attrValue.toString()) +
-      formatLine(skill, skillValue.toString()) +
-      formatLine('d10', diceRoll.toString()) +
-      (Number.isNaN(intModifier) ? '' : formatLine('Modifier', modifier)) +
-      ''.padEnd(lineWidth, '-') + '\n' +
-      formatLine('Total', total.toString()) +
-      '```\n'
-  }
-
-  return formatMessage
 }
 
 /**
@@ -114,5 +78,6 @@ function fetchCharacterStats (discordId, attribute, shortSkillNotation) {
 }
 
 export {
-  processRoll
+  processRoll,
+  fetchCharacterStats
 }
