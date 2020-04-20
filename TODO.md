@@ -4,6 +4,5 @@
 - ~~Add the rest of the weapons~~
 - ~~Ammo count & reolads???~~ (No, want to run it in real game first)
 - ~~Comments~~
-- Optimize (at least try to) SQL queries
 - ~~TODOs~~
-- Update README.md and the screenshot and the !help command output
+- ~~Update README.md and the screenshot and the !help command output~~
