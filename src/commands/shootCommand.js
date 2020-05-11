@@ -6,7 +6,7 @@ import { createShootFormatter } from '../utils/outputFormatter'
  * Accepts user mention and the required hit roll value,
  * i.e. `!roll @holdMyTea 20`
  * First it makes the hit roll, if it's less then second arg, prints the miss message,
- * if it's >=, then rolls damage and hit are, and prints them.
+ * if it's >=, then rolls damage and hit area, and prints them.
  * @param {Object} message - Discord message
  * @param {string[]} args - command args
  */
