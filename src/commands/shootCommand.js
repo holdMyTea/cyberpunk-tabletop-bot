@@ -3,25 +3,21 @@ import { rollD10, rollDice } from '../utils/diceRolls'
 import { createShootFormatter } from '../utils/outputFormatter'
 
 /**
- * Accepts user mention and the required hit roll value,
- * i.e. `!roll @holdMyTea 20`
+ * Accepts the required hit roll value,
+ * i.e. `!shoot 20`
  * First it makes the hit roll, if it's less then second arg, prints the miss message,
  * if it's >=, then rolls damage and hit area, and prints them.
  * @param {Object} message - Discord message
  * @param {string[]} args - command args
  */
 const processShootCommand = (message, args) => {
-  if (message.mentions.users.size !== 1) {
-    message.reply('You must tag one player :angry:')
-    return
-  }
-  if (args.length < 2) {
-    message.reply('Stap!!1 You must supply two arguments! :cry:')
+  if (args.length !== 1) {
+    message.reply('Stap!!1 You must supply only the hit roll requirement! :cry:')
     return
   }
 
-  const [user, hitRollRequirement] = args
-  const discordId = user.slice(3, user.length - 1)
+  const [hitRollRequirement] = args
+  const discordId = message.author.id
 
   fetchShootStats(discordId)
     .then(data => {

@@ -3,25 +3,21 @@ import db from '../db'
 import { formatRollMessage } from '../utils/outputFormatter'
 
 /**
- * Accepts user mention, attribute, shortSkillName and [modifier],
- * i.e. `!roll @holdMyTea REF танцы -3`
+ * Accepts attribute, shortSkillName and [modifier],
+ * i.e. `!roll REF танцы -3`
  * looks up char assigned to user, pulls his attr and skill stats,
  * rolls the dice, and prints all this out.
  * @param {Object} message - Discord message
  * @param {string[]} args - command args
  */
 const processRoll = (message, args) => {
-  if (message.mentions.users.size !== 1) {
-    message.reply('You must tag one player :angry:')
-    return
-  }
-  if (args.length < 3) {
-    message.reply('Stap!!1 You must supply 3 or 4 arguments :cry:')
+  if (args.length < 2) {
+    message.reply('Stap!!1 You must supply 2 or 3 arguments :cry:')
     return
   }
 
-  const [user, attribute, skillQuery, modifier = ''] = args
-  const discordId = user.slice(3, user.length - 1)
+  const [attribute, skillQuery, modifier = ''] = args
+  const discordId = message.author.id
 
   fetchCharacterStats(discordId, attribute, skillQuery)
     .then(data => {
