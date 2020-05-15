@@ -7,7 +7,7 @@ import { processShootCommand } from './shootCommand'
 
 const processCommand = message => {
   // splitting command into args
-  const [command, ...args] = message.content.slice(1).split(' ')
+  const [command, ...args] = splitCommand(message.content)
 
   console.log(`"${command}" has been called with the following args: ${args}`)
 
@@ -46,6 +46,24 @@ const processCommand = message => {
 
     default: processDummy(message)
   }
+}
+
+/**
+ * Splits message into words, prevents empty strings.
+ * @param {string} message - Discord command message content
+ */
+function splitCommand (message) {
+  return message
+    .slice(1) // removing the leading '!'
+    .split(' ') // splitting it by spaces
+    .reduce( // ensuring there won't be empty strings if messages has two spaces in a row
+      (acc, cur) => {
+        if (cur.length > 0) {
+          acc.push(cur)
+        }
+        return acc
+      }, []
+    )
 }
 
 export default processCommand
