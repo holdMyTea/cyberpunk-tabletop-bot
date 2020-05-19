@@ -38,6 +38,19 @@ const formatRollMessage = (charName, attribute, attrValue, skill, skillValue, di
 }
 
 /**
+ * Formats roll message to the `!dice` command
+ * @param {number} total - total sum of the roll
+ * @param {number[]} rolls - list of dice rolls results
+ * @param {string[]} staticModifiers - array of static modifiers
+ */
+const formatDiceMessage = (total, rolls, staticModifiers) => {
+  return '```\n' +
+    `${rolls.join('+')}${staticModifiers.join('')}` +
+    '```' +
+    `**TOTAL: ${total}**`
+}
+
+/**
  * Creates a formatter for the Shoot message
  */
 const createShootFormatter = () => {
@@ -53,6 +66,7 @@ const createShootFormatter = () => {
       this.message = '```' +
         `${characterName} shoots their ${weaponName} (${weaponType}):` + '```'
     },
+
     /**
      * Appends to the `message` hit roll additions and total
      * @param {number} refValue - character's REF stat
@@ -73,23 +87,28 @@ const createShootFormatter = () => {
         '```' +
         `**HIT ROLL TOTAL: ${hitTotal}**\n`
     },
+
     /**
      * Appends to `message` damage rolls and total
      * @param {string} weaponName
      * @param {string} weaponDamageStat - weapon's damage, in format from rulebook, i.e. `1D6+3` or `4D6'
      * @param {number} damageTotal - total sum of all `damageRolls`
      * @param {number[]} damageRolls - array of dice rolls for weapon's damage
-     * @param {number|underfined} damnageConstPart - the `+3` part of `damageStat`
+     * @param {string[]} damageStaticParts - the `+3` part of `damageStat`
      */
-    appendDamageRoll: function (weaponName, weaponDamageStat, damageTotal, damageRolls, damnageConstPart) {
+    appendDamageRoll: function (weaponName, weaponDamageStat, damageTotal, damageRolls, damageStaticParts) {
+      const spacedStaticParts = damageStaticParts.map(
+        s => s.charAt(0) + ' ' + s.slice(1)
+      ).join(' ')
       this.message +=
         'DAMAGE ROLL:\n' +
         '```\n' +
         `${weaponName} damages is ${weaponDamageStat}:\n` +
-        `${damageRolls.join(' + ')}${damnageConstPart ? ' + ' + damnageConstPart : ''}\n` +
+        `${damageRolls.join(' + ')} ${spacedStaticParts}\n` +
         '```' +
         `**DAMAGE ROLL TOTAL: ${damageTotal}**\n`
     },
+
     /**
      * Appends to `message` hit area and roll
      * @param {string} characterName
@@ -100,6 +119,7 @@ const createShootFormatter = () => {
       this.message +=
         `${characterName} hits enemy's ${hitArea} (${hitAreaRoll})`
     },
+
     /**
      * Appends to `message` miss notification
      * @param {string} characterName
@@ -114,5 +134,6 @@ const createShootFormatter = () => {
 
 export {
   formatRollMessage,
+  formatDiceMessage,
   createShootFormatter
 }

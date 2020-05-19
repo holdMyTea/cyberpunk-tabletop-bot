@@ -1,5 +1,5 @@
 import db from '../db'
-import { rollD10, rollDice } from '../utils/diceRolls'
+import { rollD10, rollDiceString } from '../utils/diceRolls'
 import { createShootFormatter } from '../utils/outputFormatter'
 
 /**
@@ -53,13 +53,13 @@ const processShootCommand = (message, args) => {
       )
 
       if (hitTotal >= hitRollRequirement) { // character hits their shots
-        const { damageTotal, damageRolls, damnageConstPart } = rollDamage(weaponDamageStat)
+        const { total, rolls, staticModifiers } = rollDiceString(weaponDamageStat)
         formatter.appendDamageRoll(
           weaponName,
           weaponDamageStat,
-          damageTotal,
-          damageRolls,
-          damnageConstPart
+          total,
+          rolls,
+          staticModifiers
         )
 
         const hitAreaRoll = rollD10()
@@ -124,39 +124,6 @@ function fetchShootStats (discordId) {
     }
     return data[0]
   })
-}
-
-/**
- * @typedef RollDamageResult
- * @property {number} damageTotal - total of damage roll
- * @property {number[]} damageRolls - array of all dice damage rolls
- * @property {number} [damnageConstPart] - the `+3` part of `1D6+3`
- */
-
-/**
- * Parses the value raw string damage stat and rolls the damage for the shot
- * @param {string} damageStat - weapon's damage stat, as appears in rulebook, i.e. `1D6+3`, `5D6`
- * @returns {RollDamageResult} results of the damage roll
- */
-function rollDamage (damageStat) {
-  const [diceRolls, modifier] = damageStat.split('+')
-  const [rollsNumber, sides] = diceRolls.split('D')
-
-  const rolls = []
-  let r
-  let total = 0
-  for (let i = 0; i < rollsNumber; i++) {
-    r = rollDice(sides)
-    rolls.push(r)
-    total += r
-  }
-  total += Number.parseInt(modifier) || 0
-
-  return {
-    damageTotal: total,
-    damageRolls: rolls,
-    damnageConstPart: modifier
-  }
 }
 
 /**
