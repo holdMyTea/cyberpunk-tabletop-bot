@@ -66,7 +66,7 @@ function fetchCharacterStats (discordId, attribute, skillQuery) {
               SELECT id FROM skills WHERE (name LIKE '%${skillQuery}%' OR short_name='${skillQuery}') LIMIT 1
             )
           ) chski ON chski.char_id = c.id
-        WHERE c.user_id = (SELECT id FROM users WHERE discord_id='${discordId}') 
+        WHERE c.user_id=${discordId}
           AND chatt.attribute_id = (SELECT id FROM attributes WHERE name='${attribute}')
       ) s1, 
       (SELECT name FROM skills WHERE (name LIKE '%${skillQuery}%' OR short_name='${skillQuery}') LIMIT 1) s2;

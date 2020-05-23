@@ -117,7 +117,7 @@ function fetchShootStats (discordId) {
       LEFT JOIN char_attrs ca ON ca.char_id=c.id AND ca.attribute_id=(
         SELECT id FROM attributes WHERE name='REF'
       )
-    WHERE c.user_id=(SELECT id FROM users WHERE discord_id='${discordId}')
+    WHERE c.user_id=${discordId}
   `).then(data => {
     if (data.length === 0) {
       throw new Error('No character picked or no weapon equipped')

@@ -36,26 +36,17 @@ const printUnassignedCharacters = message => {
  */
 const assignCharacter = (message, args) => {
   const [characterID] = args
-  const { id, username } = message.author
+  const { id } = message.author
 
   if (Number.isNaN(Number.parseInt(characterID))) {
     message.reply('Invalid character ID :angry:')
     return
   }
 
-  // create DB record for the user, if not exists already
+  // assing character to the user
   db.query(`
-    INSERT INTO users (name, discord_id)
-    SELECT * FROM (SELECT '${username}', '${id}') AS tmp
-    WHERE NOT EXISTS (
-      SELECT discord_id FROM users WHERE discord_id='${id}'
-    ) LIMIT 1;
-  `) // assing character to the user
-    .then(() => db.query(`
-      UPDATE characters SET user_id=(
-        SELECT id FROM users WHERE discord_id='${id}'
-      ) WHERE id=${characterID} AND user_id IS NULL;
-    `))
+    UPDATE characters SET user_id=${id} WHERE id=${characterID} AND user_id IS NULL;
+  `)
     .then(record => {
       if (record.changedRows === 0) { // this character is already picked by user
         throw new Error('Character is already picked')
@@ -65,9 +56,7 @@ const assignCharacter = (message, args) => {
       throw new Error('Unexpected result')
     }) // fetchin the name of the assigned character
     .then(() => db.query(`
-      SELECT name FROM characters WHERE user_id=(
-        SELECT id FROM users WHERE discord_id=${id}
-      ) LIMIT 1
+      SELECT name FROM characters WHERE user_id=${id} LIMIT 1
     `))
     .then((result) => { // printing success message
       message.reply(`You now playing as ${result[0].name} :white_check_mark:`)
@@ -75,9 +64,11 @@ const assignCharacter = (message, args) => {
     .catch(error => {
       if (error.message === 'Character is already picked') {
         message.reply('This character is already assigned to a user :thinking:')
+      } else if (error.message.startsWith('ER_DUP_ENTRY')) { // db threw an error, 'cause user_id is UNIQUE
+        message.reply('You already have an assigned character, check with `!mychar` :thinking:')
       } else {
         message.reply('Smth went wront :angry:')
-        console.error(error)
+        console.error(error.message)
       }
     })
 }
@@ -90,7 +81,7 @@ const printCurrentCharacter = message => {
   const { id } = message.author
 
   db.query(`
-    SELECT name FROM characters WHERE user_id=(SELECT id FROM users WHERE discord_id='${id}');
+    SELECT name FROM characters WHERE user_id=${id}
   `)
     .then(data => {
       if (data.length === 0) {

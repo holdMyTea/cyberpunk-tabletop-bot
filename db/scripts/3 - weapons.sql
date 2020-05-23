@@ -1,15 +1,15 @@
 SET NAMES 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci';
 
 CREATE TABLE weapon_types (
-  id INT(3) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(30) NOT NULL,
   abbr VARCHAR(5) NOT NULL, 
-  skill_id INT(4) UNSIGNED,
+  skill_id INT UNSIGNED,
   FOREIGN KEY (skill_id) REFERENCES skills(id) ON DELETE SET NULL
 );
 
 CREATE TABLE weapon_reliability (
-  id INT(1) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(20) NOT NULL,
   abbr VARCHAR(2) NOT NULL
 );
@@ -20,23 +20,23 @@ INSERT INTO weapon_reliability(name, abbr) VALUES
   ('Unreliable', 'UR');
 
 CREATE TABLE weapons (
-  id INT(4) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(40) NOT NULL UNIQUE,
-  weapon_type_id INT(3) UNSIGNED,
+  weapon_type_id INT UNSIGNED,
   FOREIGN KEY (weapon_type_id) REFERENCES weapon_types(id) ON DELETE SET NULL,
-  accuracy INT(1) NOT NULL,
+  accuracy INT NOT NULL,
   damage VARCHAR(15) NOT NULL,
-  number_of_shots INT(3) NOT NULL,
-  rate_of_fire INT(3) NOT NULL,
-  reliability_id INT(1) UNSIGNED,
+  number_of_shots INT NOT NULL,
+  rate_of_fire INT NOT NULL,
+  reliability_id INT UNSIGNED,
   FOREIGN KEY (reliability_id) REFERENCES weapon_reliability(id) ON DELETE SET NULL,
   weapon_range VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE equipped_weapons (
-  char_id INT(8) UNSIGNED UNIQUE,
+  char_id INT UNSIGNED UNIQUE,
   FOREIGN KEY (char_id) REFERENCES characters(id) ON DELETE SET NULL,
-  weapon_id INT(4) UNSIGNED,
+  weapon_id INT UNSIGNED,
   FOREIGN KEY (weapon_id) REFERENCES weapons(id) ON DELETE SET NULL
 );
 
