@@ -58,11 +58,26 @@ const assignCharacter = (message, args) => {
     `))
     .then(record => {
       if (record.changedRows === 0) { // this character is already picked by user
-        message.reply('This character is already assigned to a user :thinking:')
+        throw new Error('Character is already picked')
       } else if (record.changedRows === 1) { // all good, the char is assigned
-        message.reply(':white_check_mark: Done, you\'ve got your character')
-      } else { // is not really possible, but better have it here
-        message.reply('Smth went wrong, couldn\'t really happen :clown:')
+        return // allowing fall-through to the following then's
+      }
+      throw new Error('Unexpected result')
+    }) // fetchin the name of the assigned character
+    .then(() => db.query(`
+      SELECT name FROM characters WHERE user_id=(
+        SELECT id FROM users WHERE discord_id=${id}
+      ) LIMIT 1
+    `))
+    .then((result) => { // printing success message
+      message.reply(`You now playing as ${result[0].name} :white_check_mark:`)
+    })
+    .catch(error => {
+      if (error.message === 'Character is already picked') {
+        message.reply('This character is already assigned to a user :thinking:')
+      } else {
+        message.reply('Smth went wront :angry:')
+        console.error(error)
       }
     })
 }

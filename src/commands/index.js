@@ -17,7 +17,7 @@ const processCommand = message => {
       processRoll(message, args)
       break
 
-    case 'freeChars':
+    case 'freechars':
       printUnassignedCharacters(message)
       break
 
@@ -25,7 +25,7 @@ const processCommand = message => {
       assignCharacter(message, args)
       break
 
-    case 'myChar':
+    case 'mychar':
       printCurrentCharacter(message)
       break
 
@@ -64,7 +64,7 @@ function splitCommand (message) {
     .reduce( // ensuring there won't be empty strings if messages has two spaces in a row
       (acc, cur) => {
         if (cur.length > 0) {
-          acc.push(cur)
+          acc.push(cur.toLowerCase())
         }
         return acc
       }, []
