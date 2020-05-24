@@ -2,7 +2,8 @@
 + ~~Remove user tags from rolls and shoots, instead apply them to message authors~~
 + ~~Add a command for basic dice rolls, i.e. d6, d10, d10+5, 3d6, 4d10+7~~
 + Add meele weapons to database, and handle shoot(?) for them
-+ Add `!init` command for rolling initiative
++ ~~Add `!init` command for rolling initiative~~
+  * Separate variant for printing out all recent calls
 + ~~Print new char name when `!pick`ing~~
 + ~~(optional) Remove `users` table from DB~~ _('cause I for some reason overlooked 1-to-1 relation)_
 + ~~Make commands case-insensetive~~

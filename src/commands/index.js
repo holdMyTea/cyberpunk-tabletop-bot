@@ -5,6 +5,7 @@ import { processDummy } from './dummyCommands'
 import { processEquipCommand } from './weaponCommands'
 import { processShootCommand } from './shootCommand'
 import { processDiceCommand } from './diceCommand'
+import { processInitiativeCommand } from './initiativeCommand'
 
 const processCommand = message => {
   // splitting command into args
@@ -47,6 +48,10 @@ const processCommand = message => {
 
     case 'dice':
       processDiceCommand(message, args)
+      break
+
+    case 'init':
+      processInitiativeCommand(message)
       break
 
     default: processDummy(message)
