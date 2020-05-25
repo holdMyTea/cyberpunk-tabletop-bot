@@ -11,7 +11,9 @@ const processCommand = message => {
   // splitting command into args
   const [command, ...args] = splitCommand(message.content)
 
-  console.log(`"${command}" has been called with the following args: ${args}`)
+  console.log(`"${command}" has been called with ${
+    args.length === 0 ? 'no args' : 'the following args: ' + args
+  }`)
 
   switch (command) {
     case 'roll':
@@ -51,7 +53,7 @@ const processCommand = message => {
       break
 
     case 'init':
-      processInitiativeCommand(message)
+      processInitiativeCommand(message, args)
       break
 
     default: processDummy(message)

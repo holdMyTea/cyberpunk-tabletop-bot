@@ -51,6 +51,23 @@ const formatDiceMessage = (total, rolls, staticModifiers) => {
 }
 
 /**
+ * Formats table for `!init total`
+ * @param {string[][]} initRolls - array of [key, value]
+ */
+const formatInitTotalMessage = initRolls => {
+  let reply = '```\n' +
+    'Latest initiative rolls:\n'
+
+  initRolls.forEach(([key, value]) => {
+    reply += formatLine(key, value.toString())
+  })
+
+  reply += '```'
+
+  return reply
+}
+
+/**
  * Creates a formatter for the Shoot message
  */
 const createShootFormatter = () => {
@@ -135,5 +152,6 @@ const createShootFormatter = () => {
 export {
   formatRollMessage,
   formatDiceMessage,
+  formatInitTotalMessage,
   createShootFormatter
 }
