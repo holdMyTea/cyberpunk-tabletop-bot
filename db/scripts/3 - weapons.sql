@@ -358,7 +358,7 @@ INSERT INTO weapons (
     '400m'
   );
 
-  -- Shotguns
+-- Shotguns
 INSERT INTO weapon_types (name, abbr, skill_id) VALUES
   ('Shotgun', 'SHT', (SELECT id FROM skills WHERE short_name = 'ружье'));
 
@@ -389,4 +389,159 @@ INSERT INTO weapons (
     2,
     (SELECT id FROM weapon_reliability WHERE abbr = 'ST'),
     '50m'
+  );
+
+-- Melee
+INSERT INTO weapon_types (name, abbr, skill_id) VALUES
+  ('Melee (Fencing)', 'FENC', (SELECT id FROM skills WHERE short_name = 'фехт')),
+  ('Melee', 'MELEE', (SELECT id FROM skills WHERE short_name = 'борьба'));
+
+-- Brawling melees
+INSERT INTO weapons (
+  name, 
+  weapon_type_id, 
+  accuracy,
+  damage, 
+  number_of_shots, 
+  rate_of_fire, 
+  reliability_id,
+  weapon_range
+  ) VALUES (
+    'Club',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    0,
+    '1D6',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Knife',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    0,
+    '1D6',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Axe',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    -1,
+    '2D6+3',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Switchblade',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    0,
+    '1D3',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Brass knuckles',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    0,
+    '1D6+2',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Sledgehammer',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    -1,
+    '4D6',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Chainsaw',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    -3,
+    '4D6',
+    1,
+    1,
+    NULL,
+    '2m'
+  ),(
+    'Kendachi Monoknife',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    1,
+    '2D6',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'SPM-1 Battleglove',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    -2,
+    '3D6',
+    1,
+    1,
+    NULL,
+    '1m'
+  );
+
+-- Fencing melees
+INSERT INTO weapons (
+  name, 
+  weapon_type_id, 
+  accuracy,
+  damage, 
+  number_of_shots, 
+  rate_of_fire, 
+  reliability_id,
+  weapon_range
+  ) VALUES (
+    'Kendachi MonoKatana',
+    (SELECT id FROM weapon_types WHERE abbr = 'FENC'),
+    1,
+    '4D6',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Sword',
+    (SELECT id FROM weapon_types WHERE abbr = 'FENC'),
+    0,
+    '2D6+2',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Nunchanku',
+    (SELECT id FROM weapon_types WHERE abbr = 'FENC'),
+    0,
+    '3D6',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Tonfa',
+    (SELECT id FROM weapon_types WHERE abbr = 'FENC'),
+    0,
+    '3D6',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Naginata',
+    (SELECT id FROM weapon_types WHERE abbr = 'FENC'),
+    0,
+    '3D6',
+    1,
+    1,
+    NULL,
+    '2m'
   );

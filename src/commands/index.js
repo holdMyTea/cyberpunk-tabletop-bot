@@ -44,6 +44,7 @@ const processCommand = message => {
       processEquipCommand(message, args)
       break
 
+    case 'strike':
     case 'shoot':
       processShootCommand(message, args)
       break

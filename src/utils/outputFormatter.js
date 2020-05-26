@@ -143,7 +143,7 @@ const createShootFormatter = () => {
      */
     appendMissMessage: function (characterName) {
       this.message +=
-        `${characterName} misses their shots`
+        `${characterName} misses`
     }
   }
   return shootFormatter
