@@ -7,10 +7,9 @@
 + ~~Print new char name when `!pick`ing~~
 + ~~(optional) Remove `users` table from DB~~ _('cause I for some reason overlooked 1-to-1 relation)_
 + ~~Make commands case-insensetive~~
-+ Change order of MySQL start-up scripts
-+ Before Pull request:
-  * Update in-code docs
-  * Update README for nem command signatures
-  * Update screenshots in README
-  * Add a happy _Yes, it was used in a real game_ section
-  * Check grammar
++ ~~Before Pull request:~~
+  * ~~Update in-code docs~~
+  * ~~Update README for new command signatures~~
+  * ~~Update screenshots in README~~
+  * ~~Add a happy _Yes, it was used in a real game_ section~~
+  * ~~Update !help~~
