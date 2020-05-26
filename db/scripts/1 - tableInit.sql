@@ -3,7 +3,7 @@ SET NAMES 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci';
 USE cyberpunk;
 
 CREATE TABLE attributes (
-  id INT(2) UNSIGNED PRIMARY KEY,
+  id INT UNSIGNED PRIMARY KEY,
   name VARCHAR(10) NOT NULL
 );
 
@@ -19,10 +19,10 @@ INSERT INTO attributes (id, name) VALUES
   (9,'LUCK');
 
 CREATE TABLE skills (
-  id INT(4) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL UNIQUE,
   short_name VARCHAR(20) DEFAULT '' UNIQUE,
-  attribute_id INT(2) UNSIGNED,
+  attribute_id INT UNSIGNED,
   FOREIGN KEY (attribute_id) REFERENCES attributes(id) ON DELETE SET NULL
 );
 
@@ -148,31 +148,24 @@ INSERT INTO skills (name, short_name, attribute_id) VALUES
   ('ресурсы', 'ресур', NULL),
   ('Блат', 'блат', NULL);
 
-CREATE TABLE users (
-  id INT(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(40) NOT NULL,
-  discord_id VARCHAR(40) NOT NULL
-);
-
 CREATE TABLE characters (
-  id INT(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(80) NOT NULL,
-  user_id INT(8) UNSIGNED,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+  user_id BIGINT UNSIGNED UNIQUE KEY
 );
 
 CREATE TABLE char_attrs (
-  attr_value INT(2) UNSIGNED NOT NULL,
-  attribute_id INT(2) UNSIGNED,
-  char_id INT(8) UNSIGNED,
+  attr_value INT UNSIGNED NOT NULL,
+  attribute_id INT UNSIGNED,
+  char_id INT UNSIGNED,
   FOREIGN KEY (attribute_id) REFERENCES attributes(id) ON DELETE SET NULL,
   FOREIGN KEY (char_id) REFERENCES characters(id) ON DELETE SET NULL
 );
 
 CREATE TABLE char_skills (
-  skill_value INT(2) UNSIGNED NOT NULL,
-  skill_id INT(4) UNSIGNED,
-  char_id INT(8) UNSIGNED,
+  skill_value INT UNSIGNED NOT NULL,
+  skill_id INT UNSIGNED,
+  char_id INT UNSIGNED,
   FOREIGN KEY (skill_id) REFERENCES skills(id) ON DELETE SET NULL,
   FOREIGN KEY (char_id) REFERENCES characters(id) ON DELETE SET NULL
 );

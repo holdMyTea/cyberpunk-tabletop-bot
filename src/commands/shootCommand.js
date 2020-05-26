@@ -1,27 +1,23 @@
 import db from '../db'
-import { rollD10, rollDice } from '../utils/diceRolls'
+import { rollD10, rollDiceString } from '../utils/diceRolls'
 import { createShootFormatter } from '../utils/outputFormatter'
 
 /**
- * Accepts user mention and the required hit roll value,
- * i.e. `!roll @holdMyTea 20`
+ * Accepts the required hit roll value,
+ * i.e. `!shoot 20`
  * First it makes the hit roll, if it's less then second arg, prints the miss message,
- * if it's >=, then rolls damage and hit are, and prints them.
+ * if it's >=, then rolls damage and hit area, and prints them.
  * @param {Object} message - Discord message
  * @param {string[]} args - command args
  */
 const processShootCommand = (message, args) => {
-  if (message.mentions.users.size !== 1) {
-    message.reply('You must tag one player :angry:')
-    return
-  }
-  if (args.length < 2) {
-    message.reply('Stap!!1 You must supply two arguments! :cry:')
+  if (args.length !== 1) {
+    message.reply('Stap!!1 You must supply only the hit roll requirement! :cry:')
     return
   }
 
-  const [user, hitRollRequirement] = args
-  const discordId = user.slice(3, user.length - 1)
+  const [hitRollRequirement] = args
+  const discordId = message.author.id
 
   fetchShootStats(discordId)
     .then(data => {
@@ -57,13 +53,13 @@ const processShootCommand = (message, args) => {
       )
 
       if (hitTotal >= hitRollRequirement) { // character hits their shots
-        const { damageTotal, damageRolls, damnageConstPart } = rollDamage(weaponDamageStat)
+        const { total, rolls, staticModifiers } = rollDiceString(weaponDamageStat)
         formatter.appendDamageRoll(
           weaponName,
           weaponDamageStat,
-          damageTotal,
-          damageRolls,
-          damnageConstPart
+          total,
+          rolls,
+          staticModifiers
         )
 
         const hitAreaRoll = rollD10()
@@ -121,46 +117,13 @@ function fetchShootStats (discordId) {
       LEFT JOIN char_attrs ca ON ca.char_id=c.id AND ca.attribute_id=(
         SELECT id FROM attributes WHERE name='REF'
       )
-    WHERE c.user_id=(SELECT id FROM users WHERE discord_id='${discordId}')
+    WHERE c.user_id=${discordId}
   `).then(data => {
     if (data.length === 0) {
       throw new Error('No character picked or no weapon equipped')
     }
     return data[0]
   })
-}
-
-/**
- * @typedef RollDamageResult
- * @property {number} damageTotal - total of damage roll
- * @property {number[]} damageRolls - array of all dice damage rolls
- * @property {number} [damnageConstPart] - the `+3` part of `1D6+3`
- */
-
-/**
- * Parses the value raw string damage stat and rolls the damage for the shot
- * @param {string} damageStat - weapon's damage stat, as appears in rulebook, i.e. `1D6+3`, `5D6`
- * @returns {RollDamageResult} results of the damage roll
- */
-function rollDamage (damageStat) {
-  const [diceRolls, modifier] = damageStat.split('+')
-  const [rollsNumber, sides] = diceRolls.split('D')
-
-  const rolls = []
-  let r
-  let total = 0
-  for (let i = 0; i < rollsNumber; i++) {
-    r = rollDice(sides)
-    rolls.push(r)
-    total += r
-  }
-  total += Number.parseInt(modifier) || 0
-
-  return {
-    damageTotal: total,
-    damageRolls: rolls,
-    damnageConstPart: modifier
-  }
 }
 
 /**

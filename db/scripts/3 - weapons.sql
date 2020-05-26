@@ -1,15 +1,15 @@
 SET NAMES 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci';
 
 CREATE TABLE weapon_types (
-  id INT(3) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(30) NOT NULL,
   abbr VARCHAR(5) NOT NULL, 
-  skill_id INT(4) UNSIGNED,
+  skill_id INT UNSIGNED,
   FOREIGN KEY (skill_id) REFERENCES skills(id) ON DELETE SET NULL
 );
 
 CREATE TABLE weapon_reliability (
-  id INT(1) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(20) NOT NULL,
   abbr VARCHAR(2) NOT NULL
 );
@@ -20,23 +20,23 @@ INSERT INTO weapon_reliability(name, abbr) VALUES
   ('Unreliable', 'UR');
 
 CREATE TABLE weapons (
-  id INT(4) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(40) NOT NULL UNIQUE,
-  weapon_type_id INT(3) UNSIGNED,
+  weapon_type_id INT UNSIGNED,
   FOREIGN KEY (weapon_type_id) REFERENCES weapon_types(id) ON DELETE SET NULL,
-  accuracy INT(1) NOT NULL,
+  accuracy INT NOT NULL,
   damage VARCHAR(15) NOT NULL,
-  number_of_shots INT(3) NOT NULL,
-  rate_of_fire INT(3) NOT NULL,
-  reliability_id INT(1) UNSIGNED,
+  number_of_shots INT NOT NULL,
+  rate_of_fire INT NOT NULL,
+  reliability_id INT UNSIGNED,
   FOREIGN KEY (reliability_id) REFERENCES weapon_reliability(id) ON DELETE SET NULL,
   weapon_range VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE equipped_weapons (
-  char_id INT(8) UNSIGNED UNIQUE,
+  char_id INT UNSIGNED UNIQUE,
   FOREIGN KEY (char_id) REFERENCES characters(id) ON DELETE SET NULL,
-  weapon_id INT(4) UNSIGNED,
+  weapon_id INT UNSIGNED,
   FOREIGN KEY (weapon_id) REFERENCES weapons(id) ON DELETE SET NULL
 );
 
@@ -358,7 +358,7 @@ INSERT INTO weapons (
     '400m'
   );
 
-  -- Shotguns
+-- Shotguns
 INSERT INTO weapon_types (name, abbr, skill_id) VALUES
   ('Shotgun', 'SHT', (SELECT id FROM skills WHERE short_name = 'ружье'));
 
@@ -389,4 +389,159 @@ INSERT INTO weapons (
     2,
     (SELECT id FROM weapon_reliability WHERE abbr = 'ST'),
     '50m'
+  );
+
+-- Melee
+INSERT INTO weapon_types (name, abbr, skill_id) VALUES
+  ('Melee (Fencing)', 'FENC', (SELECT id FROM skills WHERE short_name = 'фехт')),
+  ('Melee', 'MELEE', (SELECT id FROM skills WHERE short_name = 'борьба'));
+
+-- Brawling melees
+INSERT INTO weapons (
+  name, 
+  weapon_type_id, 
+  accuracy,
+  damage, 
+  number_of_shots, 
+  rate_of_fire, 
+  reliability_id,
+  weapon_range
+  ) VALUES (
+    'Club',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    0,
+    '1D6',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Knife',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    0,
+    '1D6',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Axe',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    -1,
+    '2D6+3',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Switchblade',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    0,
+    '1D3',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Brass knuckles',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    0,
+    '1D6+2',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Sledgehammer',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    -1,
+    '4D6',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Chainsaw',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    -3,
+    '4D6',
+    1,
+    1,
+    NULL,
+    '2m'
+  ),(
+    'Kendachi Monoknife',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    1,
+    '2D6',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'SPM-1 Battleglove',
+    (SELECT id FROM weapon_types WHERE abbr = 'MELEE'),
+    -2,
+    '3D6',
+    1,
+    1,
+    NULL,
+    '1m'
+  );
+
+-- Fencing melees
+INSERT INTO weapons (
+  name, 
+  weapon_type_id, 
+  accuracy,
+  damage, 
+  number_of_shots, 
+  rate_of_fire, 
+  reliability_id,
+  weapon_range
+  ) VALUES (
+    'Kendachi MonoKatana',
+    (SELECT id FROM weapon_types WHERE abbr = 'FENC'),
+    1,
+    '4D6',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Sword',
+    (SELECT id FROM weapon_types WHERE abbr = 'FENC'),
+    0,
+    '2D6+2',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Nunchanku',
+    (SELECT id FROM weapon_types WHERE abbr = 'FENC'),
+    0,
+    '3D6',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Tonfa',
+    (SELECT id FROM weapon_types WHERE abbr = 'FENC'),
+    0,
+    '3D6',
+    1,
+    1,
+    NULL,
+    '1m'
+  ), (
+    'Naginata',
+    (SELECT id FROM weapon_types WHERE abbr = 'FENC'),
+    0,
+    '3D6',
+    1,
+    1,
+    NULL,
+    '2m'
   );

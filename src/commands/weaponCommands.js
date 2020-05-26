@@ -32,9 +32,7 @@ function printCurrentWeapon (message, discordId) {
       LEFT JOIN equipped_weapons ew ON c.id=ew.char_id
       LEFT JOIN weapons w ON ew.weapon_id=w.id
       LEFT JOIN weapon_types wt ON w.weapon_type_id=wt.id
-      WHERE c.user_id=(
-        SELECT id FROM users WHERE discord_id='${discordId}'
-      )
+    WHERE c.user_id=${discordId}
   `).then(data => {
     const { characterName, weaponName, weaponType } = data[0]
 
@@ -63,9 +61,7 @@ function printCurrentWeapon (message, discordId) {
 function equipWeapon (message, discordId, weaponQuery) {
   db.query(`
     INSERT INTO equipped_weapons(char_id, weapon_id) VALUES(
-      (SELECT id FROM characters WHERE user_id=(
-        SELECT id FROM users WHERE discord_id='${discordId}'
-      )),
+      (SELECT id FROM characters WHERE user_id=${discordId}),
       (SELECT id FROM weapons WHERE name LIKE '%${weaponQuery}%')
     ) ON DUPLICATE KEY UPDATE weapon_id=VALUES(weapon_id)
   `).then(() => {
